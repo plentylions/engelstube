@@ -28,7 +28,20 @@ class engelstubeServiceProvider extends ServiceProvider
 
     public function boot(Twig $twig, Dispatcher $dispatcher, ConfigRepository $config)
     {
+        $dispatcher->listen('IO.init.templates', function (Partial $partial)
+        {
+            pluginApp(Container::class)->register('engelstube::PageDesign.Partials.Header.NavigationList.twig', NavigationCacheSettings::class);
+            pluginApp(Container::class)->register('engelstube::PageDesign.Partials.Header.SideNavigation.twig', SideNavigationCacheSettings::class);
 
+            $partial->set('head', 'Ceres::PageDesign.Partials.Head');
+            $partial->set('header', 'Ceres::PageDesign.Partials.Header.Header');
+            $partial->set('page-design', 'Ceres::PageDesign.PageDesign');
+            $partial->set('footer', 'Ceres::PageDesign.Partials.Footer');
+
+            $partial->set('header', 'engelstube::PageDesign.Partials.Header.Header');
+
+            return false;
+        }, self::PRIORITY);
     }
 }
 
